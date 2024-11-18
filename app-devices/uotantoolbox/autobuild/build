@@ -1,0 +1,48 @@
+abinfo "Setting up architecture mapping ..."
+if ab_match_arch amd64; then
+    export UOTAN_ARCH=AMD64
+elif ab_match_arch arm64; then
+    export UOTAN_ARCH=AArch64
+elif ab_match_arch loongarch64; then
+    export UOTAN_ARCH=LoongArch64
+fi
+
+if ab_match_arch loongarch64; then
+    abinfo "Setting up executable path for the .NET 8 toolchain ..."
+    export PATH="$SRCDIR/../:$PATH"
+fi
+
+abinfo "Building the main executable ..."
+dotnet publish --self-contained true
+
+abinfo "Installing the main executable ..."
+mkdir -pv "$PKGDIR"/usr/lib/UotanToolbox/
+cp -av "$SRCDIR"/UotanToolbox/bin/Release/net8.0/linux-*/publish/* \
+    "$PKGDIR"/usr/lib/UotanToolbox/
+
+abinfo "Installing launcher script ..."
+install -Dvm755 "$SRCDIR"/UotanToolbox/Assets/Linux/UotanToolbox \
+    "$PKGDIR"/usr/bin/UotanToolbox
+
+abinfo "Installing .desktop entry ..."
+install -Dvm644 "$SRCDIR"/UotanToolbox/Assets/Linux/UotanToolbox.desktop \
+    "$PKGDIR"/usr/share/applications/UotanToolbox.desktop
+
+abinfo "Installing icon ..."
+install -Dvm644 "$SRCDIR"/UotanToolbox/Assets/Linux/UotanToolbox.png \
+    "$PKGDIR"/usr/share/pixmaps/UotanToolbox.png
+
+abinfo "Installing binary assets ..."
+cp -av "$SRCDIR"/../binary/Linux_${UOTAN_ARCH}/* \
+    "$PKGDIR"/usr/lib/UotanToolbox/
+
+# Note: This is useful to workaround potential binary incompatibilities.
+# FIXME: Build all binary projects where possible and drop the binary assets.
+abinfo "Creating symlinks to adb, fastboot ..."
+for i in adb fastboot; do
+    rm -v "$PKGDIR"/usr/lib/UotanToolbox/Bin/platform-tools/$i
+    ln -sv ../../../../bin/$i \
+        "$PKGDIR"/usr/lib/UotanToolbox/Bin/platform-tools/$i
+done
+
+# FIXME: Missing SkiaSharp and Harfbuzz (ABI 5), to be bundled.

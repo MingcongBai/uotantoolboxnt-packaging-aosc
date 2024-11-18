@@ -1,0 +1,10 @@
+# Note: AOSC OS should name this uotantoolbox per its Styling Manual, but
+# following Uotan Toolbox's guideline and name this uotantoolbox.
+PKGNAME=uotantoolbox
+PKGSEC=utils
+PKGDEP="android-platform-tools brotli libunwind lz4 pcre2 protobuf \
+        usbutils zstd"
+# FIXME: No .NET 8 SDK package for AOSC OS (loongarch64) yet.
+BUILDDEP__AMD64="dotnet"
+BUILDDEP__ARM64="dotnet"
+PKGDES="A toolbox to manipulate and communicate with Android/HarmonyOS smartphones"

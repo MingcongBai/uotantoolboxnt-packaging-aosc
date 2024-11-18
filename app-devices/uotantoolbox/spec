@@ -1,0 +1,9 @@
+VER=3.2.1
+SRCS="git::commit=tags/$VER;rename=UotanToolboxNT::https://github.com/Uotan-Dev/UotanToolboxNT \
+      git::commit=b23136c89748aa38b7a60debeab992dac171b009;rename=binary::https://github.com/Uotan-Dev/UotanToolboxNT.Binary \
+      tbl::https://github.com/shushanhf/LoongArch64-Blog-for-.NET-Mono/releases/download/sdk8.0.0-LA64-newABI-upstream/dotnet-sdk-8.0.100-linux-newABI-loongarch64.tar.gz"
+CHKSUMS="SKIP \
+         SKIP \
+         sha256::543a6a634d61bd803a812e7744a9c1d15e4a9493ab817e0a2075b09f72f2fa32"
+CHKUPDATE="anitya::id=375560"
+SUBDIR="UotanToolboxNT"
